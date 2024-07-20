@@ -21,6 +21,7 @@ def contact(request):
     return render(request, "root/contact.html")
 
 
+
 def about(request):
     context = {
         'team' : Team.objects.filter(status=True),

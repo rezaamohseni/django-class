@@ -17,7 +17,7 @@ def services(request, **kwargs):
 
 
 
-    all_services = Paginator(all_service,1)
+    all_services = Paginator(all_service,2)
 
     try:
         page_number = request.GET.get('page')

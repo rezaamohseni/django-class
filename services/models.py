@@ -55,7 +55,6 @@ class Option(models.Model):
     def __str__(self):
         return self.title
     
-    
 class Service(models.Model):
     image = models.ImageField(upload_to = 'services' , default= 'image.jpg')
     name = models.CharField(max_length=300)

@@ -39,8 +39,10 @@ def services(request, **kwargs):
     return render(request, 'services/services.html' , context = context)
 
 
-def services_detail(request , id):
+def services_detail(request ,id):
+
     service = Service.objects.get(id=id)
+
     context = {
         'service_detail': service
     }

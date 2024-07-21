@@ -1,8 +1,8 @@
-from django.shortcuts import render
-from django.shortcuts import render
+from django.shortcuts import render , redirect
 from services.models import SpecialService
 from .models import FrequentlyQuestions , ContactUs
 from services.models import Team
+from .forms   import ContactUSForm
 
 def home(request):
 
@@ -14,13 +14,24 @@ def home(request):
     
     return render(request, 'root/index.html', context=context)
 
-
 def contact(request):
-    name = request.GET.get('name')
-    email = request.GET.get('email')
-    subject = request.GET.get('subject')
-    message = request.GET.get('message')
-    return render(request, "root/contact.html")
+    if request.method == 'POST':
+        form = ContactUSForm(request.POST)
+        if form.is_valid():
+        # name = request.POST.get('name')
+        # email = request.POST.get('email')
+        # subject = request.POST.get('subject')
+        # message = request.POST.get('message')
+        # new_contact = ContactUs()
+        # new_contact.name = name
+        # new_contact.email = email
+        # new_contact.subject = subject
+        # new_contact.message = message
+        # new_contact.save()
+        return render(request, "root/contact.html")
+
+    else:
+        return render(request, "root/contact.html")
 
 
 def about(request):

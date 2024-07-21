@@ -74,5 +74,10 @@ class Service(models.Model):
     # def truncate_char(self):
     #     return str(self.description)[:10]
 
+class Coment(models.Model):
+    product_name = models.CharField(max_length=100)
+    message = models.CharField(max_length=100)
+    status = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     

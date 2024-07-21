@@ -3,6 +3,7 @@ from services.models import SpecialService
 from .models import FrequentlyQuestions , ContactUs
 from services.models import Team
 from .forms   import ContactUSForm
+from django.contrib import messages
 
 def home(request):
 
@@ -18,21 +19,19 @@ def contact(request):
     if request.method == 'POST':
         form = ContactUSForm(request.POST)
         if form.is_valid():
-        # name = request.POST.get('name')
-        # email = request.POST.get('email')
-        # subject = request.POST.get('subject')
-        # message = request.POST.get('message')
-        # new_contact = ContactUs()
-        # new_contact.name = name
-        # new_contact.email = email
-        # new_contact.subject = subject
-        # new_contact.message = message
-        # new_contact.save()
-        return render(request, "root/contact.html")
+            form.save()
+        
+            messages.add_message(request, messages.SUCCESS , 'your message was submited succsessfully')
+            return render(request, "root/contact.html")
+        
+        else:
+            messages.add_message(request, messages.ERROR , 'your input data may be incorrect')
+            return render(request, "root/contact.html")
+
 
     else:
-        return render(request, "root/contact.html")
-
+        form = ContactUSForm()
+        return render(request, "root/contact.html" , context={'form' : form})
 
 def about(request):
     context = {

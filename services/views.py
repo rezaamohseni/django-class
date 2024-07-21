@@ -1,6 +1,8 @@
-from django.shortcuts import render , get_object_or_404
-from .models import SpecialService, Team, Skill , Category , Option , Service
+from django.shortcuts import render , get_object_or_404 , redirect
+from .models import SpecialService, Team, Skill , Category , Option , Service 
 from django.core.paginator import Paginator , EmptyPage , PageNotAnInteger
+from .forms import CommentForm
+from django.contrib import messages
 
 def services(request, **kwargs):
     if kwargs.get('category'):
@@ -53,4 +55,14 @@ def services_detail(request ,id):
 
 
 def qoute(request):
-    return render(request, 'services/get-a-quote.html')
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request , messages.SUCCESS, 'your comment was delivered succssesfully and will be publish asap!')
+            return redirect(request.path_info)
+        else:
+            messages.add_message(request , messages.ERROR, 'your input data may be incorrect')
+            return redirect(request.path_info)
+    else:
+        return render(request, 'services/get-a-quote.html')

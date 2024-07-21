@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render , get_object_or_404
 from .models import SpecialService, Team, Skill , Category , Option , Service
 from django.core.paginator import Paginator , EmptyPage , PageNotAnInteger
 
@@ -16,7 +16,6 @@ def services(request, **kwargs):
         all_service = Service.objects.filter(status=True)
 
 
-
     all_services = Paginator(all_service,2)
 
     try:
@@ -30,8 +29,6 @@ def services(request, **kwargs):
         all_services = all_services.get_page(1)
     
 
-
-
     context = {            
             "services" : all_services,
             "special_services": SpecialService.objects.filter(status=True), 
@@ -41,14 +38,18 @@ def services(request, **kwargs):
 
 def services_detail(request ,id):
 
-    service = Service.objects.get(id=id)
+    try:
+        service = get_object_or_404(Service ,  id=id)
+        service.counted_view += 1
+        service.save()
 
-    context = {
+        context = {
         'service_detail': service
-    }
+        }
+        return render(request, 'services/service-details.html' , context=context)
 
-
-    return render(request, 'services/service-details.html' , context=context)
+    except: 
+        return render(request, 'services/404.html' )
 
 
 def qoute(request):

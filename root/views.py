@@ -1,10 +1,8 @@
 from django.shortcuts import render
-
 from django.shortcuts import render
 from services.models import SpecialService
-from .models import FrequentlyQuestions
+from .models import FrequentlyQuestions , ContactUs
 from services.models import Team
-
 
 def home(request):
 
@@ -18,8 +16,11 @@ def home(request):
 
 
 def contact(request):
+    name = request.GET.get('name')
+    email = request.GET.get('email')
+    subject = request.GET.get('subject')
+    message = request.GET.get('message')
     return render(request, "root/contact.html")
-
 
 
 def about(request):

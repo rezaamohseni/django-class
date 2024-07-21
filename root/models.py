@@ -10,3 +10,12 @@ class FrequentlyQuestions(models.Model):
         ordering =['-created_at']
     def __str__(self):
         return self.question
+
+class ContactUs(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    subject = models.CharField(max_length=100)
+    message = models.CharField(max_length=220)
+
+    def __str__(self):
+        return self.name

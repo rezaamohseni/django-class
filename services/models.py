@@ -73,3 +73,6 @@ class Service(models.Model):
         return self.name
     # def truncate_char(self):
     #     return str(self.description)[:10]
+
+
+    

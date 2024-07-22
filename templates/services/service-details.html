@@ -60,6 +60,9 @@
             </p>
           </div>
         </div>
+        {% for com in  comment %}
+          <p>{{com.message}}</p>
+        {% endfor %}
       </div>
     </section><!-- End Service Details Section -->
   </main><!-- End #main -->

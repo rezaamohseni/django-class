@@ -1,5 +1,5 @@
 from django.shortcuts import render , get_object_or_404 , redirect
-from .models import SpecialService, Team, Skill , Category , Option , Service 
+from .models import SpecialService, Team, Skill , Category , Option , Service , Comment
 from django.core.paginator import Paginator , EmptyPage , PageNotAnInteger
 from .forms import CommentForm
 from django.contrib import messages
@@ -42,11 +42,14 @@ def services_detail(request ,id):
 
     try:
         service = get_object_or_404(Service ,  id=id)
+        comment = Comment.objects.filter(product_name=service.name , status=True)
         service.counted_view += 1
         service.save()
 
         context = {
-        'service_detail': service
+        'service_detail': service,
+        'comment' : comment
+
         }
         return render(request, 'services/service-details.html' , context=context)
 
@@ -59,10 +62,10 @@ def qoute(request):
         form = CommentForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.add_message(request , messages.SUCCESS, 'your comment was delivered succssesfully and will be publish asap!')
+            messages.add_message(request,messages.SUCCESS,'your comment was delivered succssesfully and will be publish asap!')
             return redirect(request.path_info)
         else:
-            messages.add_message(request , messages.ERROR, 'your input data may be incorrect')
+            messages.add_message(request,messages.ERROR,'your input data may be incorrect')
             return redirect(request.path_info)
     else:
         return render(request, 'services/get-a-quote.html')

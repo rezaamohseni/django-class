@@ -79,6 +79,7 @@ class Comment(models.Model):
     message = models.TextField(max_length=100)
     status = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    
     def __str__(self):
         return self.product_name
 

@@ -69,3 +69,26 @@ def qoute(request):
             return redirect(request.path_info)
     else:
         return render(request, 'services/get-a-quote.html')
+    
+def edit_comment(request , id):
+    comment = get_object_or_404(Comment , id=id)
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.status = False
+            obj.save()
+            return redirect('services:services')
+        else:
+            messages.add_message(request,messages.ERROR , 'not save comment')
+            return redirect(request.path_info)
+
+    else:
+        form = CommentForm(instance=comment)
+        context = {
+            'form': form,
+        }
+        return render(request, 'services/edit-comment.html' , context=context)
+
+
+    

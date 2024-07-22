@@ -61,7 +61,7 @@
           </div>
         </div>
         {% for com in  comment %}
-          <p>{{com.message}}</p>
+          <p><a href={% url 'services:edit_comment' id=com.id %}>{{com.message}}</p>
         {% endfor %}
       </div>
     </section><!-- End Service Details Section -->

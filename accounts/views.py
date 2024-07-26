@@ -1,10 +1,11 @@
-from django.shortcuts import render , redirect
-from .forms import LoginForm , RegisterForm , ChangePasswordForm
+from django.shortcuts import render , redirect , get_list_or_404
+from .forms import LoginForm , RegisterForm , ChangePasswordForm , ResetPasswordForm , ResetPasswordConfirm , EditProfileForm
 from django.contrib.auth import login , logout , authenticate , password_validation
 from django.contrib.auth.models import User 
 from django.contrib.auth.decorators import login_required 
 from django.contrib import messages
-
+from django.core.mail import send_mail
+from rest_framework.authtoken.models import  Token
 
 
 def login_user(request):
@@ -88,13 +89,69 @@ def change_password(request):
     else:
         messages.add_message(request ,messages.ERROR,'input data is not valid')
         return redirect('accounts:login')
+
 def reset_password(request):
-    pass
+    if request.method == 'POST':
+        try:
+            user = User.objects.get(email = request.POST.get('email'))
+            token , create = Token.objects.get_or_create(user=user)
+            send_mail(
+                'reset password',
+                f'http://127.0.0.1:8000/accounts/reset_password_confirm/{token.key}',
+                from_email='noreply@localhost',
+                recipient_list=[user.email],
+                fail_silently=True,
+            )
+            return redirect('accounts:reset_password_done')
+        except:
+            return redirect('accounts:reset_password')
+
+    else:
+        form = ResetPasswordForm()
+        context = {
+            'form' : form,
+        }
+        return render(request , 'registrations/reset_password.html' , context=context)
+
+
 def reset_password_done(request):
-    pass
-def reset_password_confirm(request):
-    pass
+    return render(request , 'registrations/reset_password_done.html' )
+
+
+def reset_password_confirm(request , token):
+    if request.method == 'POST':
+        user_name = Token.objects.get (key=token).user
+        user = User.objects.get(username=user_name)
+        pass1 = request.POST.get('new_password1')
+        pass2 = request.POST.get('new_password2')
+        if (pass1 == pass2) and (pass1 and pass2):
+            password_validation.validate_password(pass1)
+            user.set_password(pass1)
+            user.save()
+            return redirect('accounts:reset_password_complete')
+        else:
+            messages.add_message(request ,messages.ERROR,'password is not valid')
+            return render(request , 'registrations/reset_password_confirm.html')
+
+    else:
+        form = ResetPasswordConfirm()
+        context = {
+            'form' : form,
+        }
+        return render(request , 'registrations/reset_password_confirm.html'  , context=context)
+
+
 def reset_password_complete(request):
-    pass
-def edit_profile(request):
-    pass
+    return render(request , 'registrations/reset_password_complete.html' )
+
+
+def edit_profile(request , id):
+    user = get_list_or_404(User , id=id )
+    if request.method == 'POST':
+        pass
+    else:
+        form = EditProfileForm(instance=user)
+        context = {
+            'form': form
+        }
+        return render(request , 'registrations/edit_profile.html' , context=context)

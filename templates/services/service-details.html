@@ -60,6 +60,7 @@
             </p>
           </div>
         </div>
+        
         {% for com in  comment %}
           <p><a href={% url 'services:edit_comment' id=com.id %}>{{com.message}}</p>
         {% endfor %}

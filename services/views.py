@@ -59,14 +59,17 @@ def services_detail(request ,id):
 
 def qoute(request):
     if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.add_message(request,messages.SUCCESS,'your comment was delivered succssesfully and will be publish asap!')
-            return redirect(request.path_info)
+        if request.user.is_authenticated:
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.add_message(request,messages.SUCCESS,'your comment was delivered succssesfully and will be publish asap!')
+                return redirect(request.path_info)
+            else:
+                messages.add_message(request,messages.ERROR,'your input data may be incorrect')
+                return redirect(request.path_info)
         else:
-            messages.add_message(request,messages.ERROR,'your input data may be incorrect')
-            return redirect(request.path_info)
+            return redirect('accounts:login')
     else:
         return render(request, 'services/get-a-quote.html')
     

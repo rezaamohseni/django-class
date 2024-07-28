@@ -17,15 +17,20 @@ def login_user(request):
         }
         return render(request , 'registrations/login.html' , context=context)
     else:
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(username=username , password=password)
-    if user is not None:
-        login(request , user)
-        return redirect('/')
-    else:
-        messages.add_message(request ,messages.ERROR,'input data is not valid')
-        return redirect('accounts:login')
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(username=username , password=password)
+            if user is not None:
+                login(request , user)
+                return redirect('/')
+            else:
+                messages.add_message(request ,messages.ERROR,'input data is not valid')
+                return redirect('accounts:login')
+        else:
+            messages.add_message(request ,messages.ERROR,'input data is not valid')
+            return redirect('accounts:login')            
 
 @login_required
 def logout_user(request):

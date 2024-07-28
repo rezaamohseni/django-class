@@ -12,6 +12,9 @@ class LoginForm(forms.Form):
 class RegisterForm(UserCreationForm):
     email = forms.EmailField()
 
+    class Meta(UserCreationForm.Meta):
+        model = User
+
 class ChangePasswordForm(forms.Form):
     old_password = forms.CharField(max_length=20 , widget=forms.PasswordInput)
     new_password1 = forms.CharField(max_length=20 , widget=forms.PasswordInput)

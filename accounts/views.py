@@ -150,8 +150,7 @@ def edit_profile(request , id):
         if request.user.is_authenticated:
             user = get_object_or_404(User , id=id)
             if request.method == 'POST':
-                form = EditProfileForm(request.POST , instance=user)
-                user.save()
+                form = EditProfileForm(request.POST,request.FILES,instance=user)
                 if form.is_valid():
                     form.save()
                     return redirect('/')

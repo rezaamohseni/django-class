@@ -70,7 +70,7 @@
               <h3><a href={% url 'services:services-detail' id=service.id  %}>{{service.name}}</a></h3>
               <p>{{service.content}}</p>
               <p><a href={% url 'services:services' %}?price={{service.price}}> price : {{service.price|intcomma}}</a><p>
-              <p>visited : {{service.counted_view}}<p>
+              <p>visited : {{service.counted_view|apnumber}}<p>
               <p>started_at : {{service.created_at|date:'D d M o'}}<p>
             </div>
           </div><!-- End Card Item -->

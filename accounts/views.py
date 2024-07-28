@@ -1,12 +1,13 @@
-from django.shortcuts import render , redirect , get_list_or_404
+from django.shortcuts import render , redirect , get_object_or_404
 from .forms import LoginForm , RegisterForm , ChangePasswordForm , ResetPasswordForm , ResetPasswordConfirm , EditProfileForm
 from django.contrib.auth import login , logout , authenticate , password_validation
-from django.contrib.auth.models import User 
 from django.contrib.auth.decorators import login_required 
 from django.contrib import messages
 from django.core.mail import send_mail
 from rest_framework.authtoken.models import  Token
-
+# from django.contrib.auth.models import User 
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 def login_user(request):
     if request.method == 'GET':
@@ -146,12 +147,24 @@ def reset_password_complete(request):
 
 
 def edit_profile(request , id):
-    user = get_list_or_404(User , id=id )
-    if request.method == 'POST':
-        pass
-    else:
-        form = EditProfileForm(instance=user)
-        context = {
-            'form': form
-        }
-        return render(request , 'registrations/edit_profile.html' , context=context)
+        if request.user.is_authenticated:
+            user = get_object_or_404(User , id=id)
+            if request.method == 'POST':
+                form = EditProfileForm(request.POST , instance=user)
+                user.save()
+                if form.is_valid():
+                    form.save()
+                    return redirect('/')
+                
+                else:
+                    messages.add_message(request,messages.ERROR , 'not save is changes')
+                    return redirect(request.path_info)
+                
+            else:
+                form = EditProfileForm(instance=user)
+                context = {
+                    'form': form
+                }
+                return render(request , 'registrations/edit_profile.html' , context=context)
+        else:
+            return redirect('accounts:login')

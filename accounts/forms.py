@@ -1,7 +1,7 @@
 from django import forms 
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-
+from django.contrib.auth import get_user_model
+User = get_user_model()
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=25)
     password = forms.CharField(max_length=20 , widget=forms.PasswordInput)
@@ -27,4 +27,4 @@ class EditProfileForm(forms.ModelForm):
     
     class Meta:
         model = User
-        fields = ['first_name' , 'last_name']
+        fields = ['first_name' , 'last_name' , 'image' , 'phone' , 'id_code' ]

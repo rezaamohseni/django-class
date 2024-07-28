@@ -38,9 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'accounts',
     'root',
     'services',
+    'accounts',
     'rest_framework.authtoken',
 ]
 
@@ -138,3 +138,4 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+AUTH_USER_MODEL = 'accounts.CustumUser'

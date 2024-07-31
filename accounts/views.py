@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.mail import send_mail
 from rest_framework.authtoken.models import  Token
+from .models import Profile
 # from django.contrib.auth.models import User 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -19,9 +20,9 @@ def login_user(request):
     else:
         form = LoginForm(request.POST)
         if form.is_valid():
-            username = request.POST.get('username')
+            email = request.POST.get('email')
             password = request.POST.get('password')
-            user = authenticate(username=username , password=password)
+            user = authenticate(username=email , password=password)
             if user is not None:
                 login(request , user)
                 return redirect('/')
@@ -42,6 +43,8 @@ def signup_user(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+            profile = Profile.objects.create(user=user)
+            profile.save()
             login(request,user )
             messages.add_message(request , messages.SUCCESS , 'your account was created successfuly')
             return redirect('/')

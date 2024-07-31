@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.sitemaps',
     'robots',
-    'captcha',
 ]
 
 SITE_ID = 2
@@ -144,4 +143,4 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-AUTH_USER_MODEL = 'accounts.CustumUser'
+AUTH_USER_MODEL = 'accounts.CustomUser'

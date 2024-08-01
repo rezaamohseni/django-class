@@ -5,7 +5,7 @@ from .models import Profile
 User = get_user_model() 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=25)
+    email = forms.EmailField()
     password = forms.CharField(max_length=20 , widget=forms.PasswordInput)
 
 class RegisterForm(UserCreationForm):

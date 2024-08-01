@@ -30,7 +30,7 @@ def login_user(request):
                 messages.add_message(request ,messages.ERROR,'input data is not valid')
                 return redirect('accounts:login')
         else:
-            messages.add_message(request ,messages.ERROR,'input data is not validd0')
+            messages.add_message(request ,messages.ERROR,'input data is not validd')
             return redirect('accounts:login')            
 
 @login_required

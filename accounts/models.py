@@ -26,11 +26,11 @@ class CustomeBaseUserManager(BaseUserManager):
         extra_fields.setdefault('is_verified' , True)
         extra_fields.setdefault('is_superuser' , True)
 
-        if extra_fields.get('is_staff')is not True:
+        if extra_fields.get('is_staff') is not True:
             raise ValueError('super user can not be create . is_staff cant be false')
-        if extra_fields.get('is_superuser')is not True:
+        if extra_fields.get('is_superuser') is not True:
             raise ValueError('super user can not be create . is_superuser cant be false')
-        if extra_fields.get('is_verified')is not True:
+        if extra_fields.get('is_verified') is not True:
             raise ValueError('super user can not be create . is_verified cant be false')
         return self.create_user(email,password,**extra_fields )
         

@@ -25,6 +25,21 @@ class ServiceView(ListView):
             all_service = Service.objects.filter(status = True)
 
         return all_service
+    
+    
+class Service_detailview(DetailView):
+    model = Service
+    template_name = 'services/service-details.html'
+    context_object_name = 'service_detail'
+
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context =  super().get_context_data(**kwargs)
+        service = self.model.objects.get(pk=self.kwargs.get('pk'))
+        comment = Comment.objects.filter(product_name=service.name  , status = True)
+        context ['comment'] = comment
+        return context
+
 
 # def services(request, **kwargs):
 #     if kwargs.get('category'):
@@ -58,20 +73,6 @@ class ServiceView(ListView):
 #             "special_services": SpecialService.objects.filter(status=True), 
 #         }
 #     return render(request, 'services/services.html' , context = context)
-
-class Service_detail_view(DetailView):
-    model = Service
-    template_name = 'services/service-details.html'
-    context_object_name = 'service_detail'
-
-    def get(self, request, *args , **kwargs):
-        service = self.model.objects.get(pk=kwargs.get('pk'))
-        service.counted_view += 1
-        service.save()
-    # def get_context_data(self,**kwargs):
-
-
-
 
 
 

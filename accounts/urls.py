@@ -1,10 +1,12 @@
 from django.urls import path
-from .views import edit_profile , reset_password , reset_password_complete , reset_password_confirm , reset_password_done , change_password , signup_user , login_user , logout_user
+from .views import (edit_profile , reset_password , reset_password_complete 
+                ,reset_password_confirm , reset_password_done , change_password 
+                ,Loginview,signup_user,logout_user)
 app_name = 'accounts'
 urlpatterns = [
-    path('login/',login_user , name='login'),
+    path('login/',Loginview.as_view(), name='login'),
     path('logout/',logout_user , name='logout'),
-    path('signup/',signup_user , name='signup'),
+    path('signup/',signup_user, name='signup'),
     path('change_password/',change_password , name='change_password'),
     path('reset_password/',reset_password , name='reset_password'),
     path('reset_password_done/',reset_password_done , name='reset_password_done'),

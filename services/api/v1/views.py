@@ -6,57 +6,164 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAdminUser,IsAuthenticated,IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import ListModelMixin , CreateModelMixin , RetrieveModelMixin , DestroyModelMixin , UpdateModelMixin
+from rest_framework import viewsets
 
 
 
-
-class ServiceApiView(APIView):
+class ServiceApiViewSet(viewsets.ModelViewSet):
     permission_classes=[IsAuthenticatedOrReadOnly]
-    def get(self , request, *args, **kwargs):
-        services = Service.objects.all()
-        serializer = Serviceserializer(services ,many = True)
-        return Response(serializer.data)
+    serializer_class = Serviceserializer
+    def get_queryset(self):
+        return Service.objects.all()
+    
+
+# ======================================================
+# start level 5
+# ======================================================
+# class ServiceApiViewSet(viewsets.ViewSet):
+
+#     serializer_class = Serviceserializer
+
+#     def get_queryset(self):
+#         return Service.objects.all()
+    
+#     def list(self , request, *args, **kwargs):
+#         serializer = self.serializer_class(self.get_queryset(), many=True)
+#         return Response(serializer.data)
+
+#     def create(self , request, *args, **kwargs):
+#         serializer = self.serializer_class(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data , status=status.HTTP_201_CREATED)
+#         else:
+#             return Response(serializer.error)
 
 
-    def post(self , request, *args , **kwargs):
-        if request.user.is_superuser:
-            serializer = Serviceserializer(data=request.data )
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data , status=status.HTTP_201_created)
+#     def update(self , request, *args, **kwargs):
+#         services = get_object_or_404(Service , id=kwargs.get('pk'))
+#         serializer = self.serializer_class(services, data = request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data ,status=status.HTTP_200_OK)
+
+
+#     def destroy(self , request, *args, **kwargs):
+#         services = get_object_or_404(Service , id=kwargs.get('pk'))
+#         services.delete()
+#         return Response('service deleted', status=status.HTTP_204_NO_CONTENT)
+
+
+#     def retrieve(self , request, *args, **kwargs):
+#         services = get_object_or_404(Service , id=kwargs.get('pk'))
+#         serializer = self.serializer_class(services)
+#         return Response(serializer.data ,status=status.HTTP_200_OK)
+# ======================================================
+# end level 5
+# ======================================================
+
+
+# ======================================================
+# start level 4
+# ======================================================
+
+# class ServiceApiView(GenericAPIView , RetrieveModelMixin , DestroyModelMixin , UpdateModelMixin):
+#     permission_classes=[IsAuthenticatedOrReadOnly]
+#     serializer_class = Serviceserializer
+#     lookupp_fiels = 'id'
+
+#     def get(self , request, *args, **kwargs):
+#         return self.retrieve(request, *args, **kwargs)
+
+
+#     def patch(self , request, *args, **kwargs):
+#         return self.update(request , *args, **kwargs)
+
+
+#     def delete(self , request, *args, **kwargs):
+#         return self.destroy(request , *args, **kwargs)
+# ======================================================
+# end level 4
+# ======================================================
+
+
+# ======================================================
+# start level 3
+# ======================================================
+
+# class ServiceApiView(GenericAPIView , ListModelMixin , CreateModelMixin):
+#     permission_classes=[IsAuthenticatedOrReadOnly]
+#     serializer_class = Serviceserializer
+
+#     def get_queryset(self):
+#         return Service.objects.all()
+    
+#     def get(self , request, *args, **kwargs):
+#         return self.list(request, *args, **kwargs)
+
+#     def post(self , request, *args, **kwargs):
+#         return self.create(request , *args, **kwargs)
+# ======================================================
+# end level 3
+# ======================================================
+
+
+# ===========================================
+# start class base level  2 
+# ==========================================
+
+# class ServiceApiView(APIView):
+#     permission_classes=[IsAuthenticatedOrReadOnly]
+#     def get(self , request, *args, **kwargs):
+#         services = Service.objects.all()
+#         serializer = Serviceserializer(services ,many = True)
+#         return Response(serializer.data)
+
+
+#     def post(self , request, *args , **kwargs):
+#         if request.user.is_superuser:
+#             serializer = Serviceserializer(data=request.data )
+#             if serializer.is_valid():
+#                 serializer.save()
+#                 return Response(serializer.data , status=status.HTTP_201_created)
         
-            else:
-                return Response(serializer.error)
-        else:
-            return Response('permission denied' , status=status.HTTP_401_UNAUTHORIZED)
+#             else:
+#                 return Response(serializer.error)
+#         else:
+#             return Response('permission denied' , status=status.HTTP_401_UNAUTHORIZED)
 
 
-class ServiceDetailApiview(APIView):
-    permission_classes=[IsAuthenticatedOrReadOnly] 
+# class ServiceDetailApiview(APIView):
+#     permission_classes=[IsAuthenticatedOrReadOnly] 
 
-    def get(self , request, *args, **kwargs):
-        id = kwargs.get('id')
-        services = get_object_or_404(Service , id=id)
-        serializer = Serviceserializer(services)
-        return Response(serializer.data)
-    def patch(self , request, *args, **kwargs):
-        services = get_object_or_404(Service , id=id)
-        serializer = Serviceserializer(services , data = request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data ,status=status.HTTP_200_OK)
+#     def get(self , request, *args, **kwargs):
+#         id = kwargs.get('id')
+#         services = get_object_or_404(Service , id=id)
+#         serializer = Serviceserializer(services)
+#         return Response(serializer.data)
+#     def patch(self , request, *args, **kwargs):
+#         services = get_object_or_404(Service , id=id)
+#         serializer = Serviceserializer(services , data = request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data ,status=status.HTTP_200_OK)
 
     
-    def delete(self , request, *args, **kwargs):
-        services = get_object_or_404(Service , id=id)
-        services.delete()
-        return Response('service deleted', status=status.HTTP_204_NO_CONTENT)
+#     def delete(self , request, *args, **kwargs):
+#         services = get_object_or_404(Service , id=id)
+#         services.delete()
+#         return Response('service deleted', status=status.HTTP_204_NO_CONTENT)
+
+# =====================================
+# end class base level 2
+# =====================================
 
 
-
-
-
-
+#==============================
+# start level 1   functions base !!!!!
+#==============================
 # @api_view(['GET', 'POST'])
 # @permission_classes([IsAuthenticatedOrReadOnly])  
 # def services(request):
@@ -74,11 +181,6 @@ class ServiceDetailApiview(APIView):
 #                 return Response(serializer.error)
 #         else:
 #             return Response('permission denied' , status=status.HTTP_401_UNAUTHORIZED)
-
-
-
-
-
 
 
 # @api_view(['GET', 'PATCH','DELETE'])
@@ -102,4 +204,6 @@ class ServiceDetailApiview(APIView):
 #         service.delete()
 #         return Response('service deleted', status=status.HTTP_204_NO_CONTENT)
 
-
+#==================================
+#end level 1
+#=================================

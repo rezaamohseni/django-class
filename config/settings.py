@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
     'django.contrib.humanize',
     'root',
     'services',
@@ -46,6 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'robots',
     'rest_framework',
+    'django_filters',
+    
 ]
 
 SITE_ID = 2

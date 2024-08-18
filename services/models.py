@@ -76,6 +76,7 @@ class Service(models.Model):
     #     return str(self.description)[:10]
 
 class Comment(models.Model):
+    user = models.ForeignKey(User , on_delete=models.CASCADE)
     product_name = models.CharField(max_length=100)
     message = models.TextField(max_length=100)
     status = models.BooleanField(default=False)

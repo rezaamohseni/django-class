@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from services.models import Service ,Team , Category , Skill 
-from ...models import Category , Option
+from ...models import Category , Option , Comment
+
 
 class Serviceserializer(serializers.ModelSerializer):
     # name = serializers.ReadOnlyField()
@@ -59,3 +60,29 @@ class skillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skill
         fields = '__all__'
+
+class CommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = ['product_name' , 'message' , 'user']
+        read_only_fields = ['user']
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        user = request.user
+        validated_data['user'] = user
+        return super().create(validated_data)
+    
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['user'] = self.context.get('request').user.email
+        return rep
+    
+    def update(self, instance, validated_data):
+        request = self.context.get('request')
+        user = request.user
+        if request.user == instance.user:
+            return super().update(instance , validated_data)
+        else:
+            raise ValueError('your username must by same as login user')

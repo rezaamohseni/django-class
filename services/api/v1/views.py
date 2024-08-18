@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view , permission_classes
 from rest_framework.response import Response
-from services.models import Service
-from .serializer import Serviceserializer
+from services.models import Service , Team
+from .serializer import Serviceserializer , TeamSerializer
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAdminUser,IsAuthenticated,IsAuthenticatedOrReadOnly
@@ -18,6 +18,12 @@ class ServiceApiViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Service.objects.all()
     
+class TeamApiViewSet(viewsets.ModelViewSet):
+    permission_classes=[IsAuthenticatedOrReadOnly]
+    serializer_class = TeamSerializer
+    def get_queryset(self):
+        return Team.objects.all()
+
 
 # ======================================================
 # start level 5

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from services.models import Service ,Team , Category , Skill 
 from ...models import Category , Option , Comment
+from rest_framework.exceptions import MethodNotAllowed
 
 
 class Serviceserializer(serializers.ModelSerializer):
@@ -74,15 +75,16 @@ class CommentSerializer(serializers.ModelSerializer):
         validated_data['user'] = user
         return super().create(validated_data)
     
+    
+    # def update(self, instance, validated_data):
+    #     request = self.context.get('request')
+    #     user = request.user
+    #     if request.user == instance.user:
+    #         return super().update(instance , validated_data)
+    #     else:
+    #         raise MethodNotAllowed('Update')
+
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep['user'] = self.context.get('request').user.email
         return rep
-    
-    def update(self, instance, validated_data):
-        request = self.context.get('request')
-        user = request.user
-        if request.user == instance.user:
-            return super().update(instance , validated_data)
-        else:
-            raise ValueError('your username must by same as login user')

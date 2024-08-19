@@ -12,6 +12,7 @@ from rest_framework import viewsets
 from .permissions import IsAdminOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend 
 from rest_framework import filters
+from rest_framework.exceptions import MethodNotAllowed
 
 
 class ServiceApiViewSet(viewsets.ModelViewSet):
@@ -37,6 +38,23 @@ class CommentApiViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     def get_queryset(self):
         return Comment.objects.all()
+    
+    def destroy(self, request, *args, **kwargs):
+        comment = get_object_or_404(Comment , id = kwargs.get('pk'))
+        if comment.user == request.user:
+            comment.delete()
+            return Response('service deleted successfully',status=status.HTTP_204_NO_CONTENT)
+        else:
+            raise MethodNotAllowed('DELETE')
+        
+    def patch(self,instance ,  request, *args, **kwargs):
+        comment = get_object_or_404(Comment , id = kwargs.get('pk'))
+        user = request.user
+        if comment.user == request.user:
+            comment.update(instance)
+            return Response('service update successfully',status=status.HTTP_204_NO_CONTENT)
+        else:
+            raise MethodNotAllowed('Update')
 
 # ======================================================
 # start level 5

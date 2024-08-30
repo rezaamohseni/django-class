@@ -16,7 +16,7 @@ from rest_framework.exceptions import MethodNotAllowed
 from .pagination import Custompagination
 
 class ServiceApiViewSet(viewsets.ModelViewSet):
-    permission_classes=[IsAdminUser]
+    permission_classes=[IsAuthenticatedOrReadOnly]
     serializer_class = Serviceserializer
     filter_backends = [DjangoFilterBackend , filters.SearchFilter , filters.OrderingFilter]
     filterset_fields = ['category', 'name']

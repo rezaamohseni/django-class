@@ -1,11 +1,11 @@
 from typing import Any
 from django.http.request import HttpRequest as HttpRequest
 from django.http.response import HttpResponse as HttpResponse
-from django.shortcuts import render , redirect
+from django.shortcuts import render, redirect
 from services.models import SpecialService
-from .models import FrequentlyQuestions , ContactUs
+from .models import FrequentlyQuestions, ContactUs
 from services.models import Team
-from .forms   import ContactUSForm
+from .forms import ContactUSForm
 from django.contrib import messages
 from django.views.generic import TemplateView
 
@@ -16,37 +16,42 @@ from django.views.generic import TemplateView
 #         'team' : Team.objects.filter(status=True),
 #         'questions': FrequentlyQuestions.objects.filter(status=True)[::-1],
 #         }
-    
+
 #     return render(request, 'root/index.html', context=context)
 
+
 class HomeView(TemplateView):
-    template_name = 'root/index.html'
-    
+    template_name = "root/index.html"
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context ['team'] = Team.objects.all()
-        context ['questions'] = FrequentlyQuestions.objects.all()
-        context ['specials'] = SpecialService.objects.all()
-        return context 
+        context["team"] = Team.objects.all()
+        context["questions"] = FrequentlyQuestions.objects.all()
+        context["specials"] = SpecialService.objects.all()
+        return context
 
 
 def contact(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ContactUSForm(request.POST)
         if form.is_valid():
             form.save()
-        
-            messages.add_message(request, messages.SUCCESS , 'your message was submited succsessfully')
-            return render(request, "root/contact.html")
-        
-        else:
-            messages.add_message(request, messages.ERROR , 'your input data may be incorrect')
+
+            messages.add_message(
+                request, messages.SUCCESS, "your message was submited succsessfully"
+            )
             return render(request, "root/contact.html")
 
+        else:
+            messages.add_message(
+                request, messages.ERROR, "your input data may be incorrect"
+            )
+            return render(request, "root/contact.html")
 
     else:
         form = ContactUSForm()
-        return render(request, "root/contact.html" , context={'form' : form})
+        return render(request, "root/contact.html", context={"form": form})
+
 
 # def about(request):
 #     context = {
@@ -55,9 +60,8 @@ def contact(request):
 #     return render(request, "root/about.html", context=context)
 class AboutView(TemplateView):
     template_name = "root/about.html"
-    
+
     def get_context_data(self, **kwargs):
-        context= super().get_context_data(**kwargs)
-        context ['team'] = Team.objects.all()
-        return context 
-        
+        context = super().get_context_data(**kwargs)
+        context["team"] = Team.objects.all()
+        return context

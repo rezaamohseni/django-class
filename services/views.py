@@ -1,43 +1,48 @@
 from typing import Any
 from django.db.models.query import QuerySet
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render , get_object_or_404 , redirect
-from .models import SpecialService, Team, Skill , Category , Option , Service , Comment
-from django.core.paginator import Paginator , EmptyPage , PageNotAnInteger
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import SpecialService, Team, Skill, Category, Option, Service, Comment
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import CommentForm
 from django.contrib import messages
-from django.views.generic import ListView , DetailView
+from django.views.generic import ListView, DetailView
+
 
 class ServiceView(ListView):
-    template_name = 'services/services.html'
-    context_object_name = 'services'
-    paginate_by =  2
+    template_name = "services/services.html"
+    context_object_name = "services"
+    paginate_by = 2
+
     def get_queryset(self):
-        if self.kwargs.get('category'):
-            all_service = Service.objects.filter(category__title=self.kwargs.get('category'))
+        if self.kwargs.get("category"):
+            all_service = Service.objects.filter(
+                category__title=self.kwargs.get("category")
+            )
 
-        if self.kwargs.get('search'):
-            all_service = Service.objects.filter(content__contains=self.kwargs.get('search'))
+        if self.kwargs.get("search"):
+            all_service = Service.objects.filter(
+                content__contains=self.kwargs.get("search")
+            )
 
-        if self.kwargs.get('price'):
-            all_service = Service.objects.filter(price__lte=self.kwargs.get('price'))
+        if self.kwargs.get("price"):
+            all_service = Service.objects.filter(price__lte=self.kwargs.get("price"))
         else:
-            all_service = Service.objects.filter(status = True)
+            all_service = Service.objects.filter(status=True)
 
         return all_service
-    
-    
+
+
 class Service_detailview(DetailView):
     model = Service
-    template_name = 'services/service-details.html'
-    context_object_name = 'service_detail'
-
+    template_name = "services/service-details.html"
+    context_object_name = "service_detail"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        context =  super().get_context_data(**kwargs)
-        service = self.model.objects.get(pk=self.kwargs.get('pk'))
-        comment = Comment.objects.filter(product_name=service.name  , status = True)
-        context ['comment'] = comment
+        context = super().get_context_data(**kwargs)
+        service = self.model.objects.get(pk=self.kwargs.get("pk"))
+        comment = Comment.objects.filter(product_name=service.name, status=True)
+        context["comment"] = comment
         return context
 
 
@@ -51,7 +56,7 @@ class Service_detailview(DetailView):
 #     elif kwargs.get('price'):
 #         all_service = Service.objects.filter(price__lte=kwargs.get('price'))
 
-#     else:    
+#     else:
 #         all_service = Service.objects.filter(status=True)
 
 
@@ -66,15 +71,13 @@ class Service_detailview(DetailView):
 
 #     except EmptyPage:
 #         all_services = all_services.get_page(1)
-    
 
-#     context = {            
+
+#     context = {
 #             "services" : all_services,
-#             "special_services": SpecialService.objects.filter(status=True), 
+#             "special_services": SpecialService.objects.filter(status=True),
 #         }
 #     return render(request, 'services/services.html' , context = context)
-
-
 
 
 # def services_detail(request ,id):
@@ -92,45 +95,49 @@ class Service_detailview(DetailView):
 #         }
 #         return render(request, 'services/service-details.html' , context=context)
 
-#     except: 
+#     except:
 #         return render(request, 'services/404.html' )
 
 
 def qoute(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         if request.user.is_authenticated:
             form = CommentForm(request.POST)
             if form.is_valid():
                 form.save()
-                messages.add_message(request,messages.SUCCESS,'your comment was delivered succssesfully and will be publish asap!')
+                messages.add_message(
+                    request,
+                    messages.SUCCESS,
+                    "your comment was delivered succssesfully and will be publish asap!",
+                )
                 return redirect(request.path_info)
             else:
-                messages.add_message(request,messages.ERROR,'your input data may be incorrect')
+                messages.add_message(
+                    request, messages.ERROR, "your input data may be incorrect"
+                )
                 return redirect(request.path_info)
         else:
-            return redirect('accounts:login')
+            return redirect("accounts:login")
     else:
-        return render(request, 'services/get-a-quote.html')
-    
-def edit_comment(request , id):
-    comment = get_object_or_404(Comment , id=id)
-    if request.method == 'POST':
+        return render(request, "services/get-a-quote.html")
+
+
+def edit_comment(request, id):
+    comment = get_object_or_404(Comment, id=id)
+    if request.method == "POST":
         form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.status = False
             obj.save()
-            return redirect('services:services')
+            return redirect("services:services")
         else:
-            messages.add_message(request,messages.ERROR , 'not save comment')
+            messages.add_message(request, messages.ERROR, "not save comment")
             return redirect(request.path_info)
 
     else:
         form = CommentForm(instance=comment)
         context = {
-            'form': form,
+            "form": form,
         }
-        return render(request, 'services/edit-comment.html' , context=context)
-
-
-    
+        return render(request, "services/edit-comment.html", context=context)

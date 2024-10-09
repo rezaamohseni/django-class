@@ -10,14 +10,15 @@ class StaticViewSitemap(Sitemap):
 
     def items(self):
         return [
-            'root:home',
-            'root:about',
-            'root:contact',
-            'services:services',
-
+            "root:home",
+            "root:about",
+            "root:contact",
+            "services:services",
         ]
+
     def location(self, item):
         return reverse(item)
+
 
 class DynamicViewSitemap(Sitemap):
     priority = 0.5
@@ -25,7 +26,6 @@ class DynamicViewSitemap(Sitemap):
 
     def items(self):
         return Service.objects.all()
-    
+
     def location(self, obj):
-        return '/services/service-detail/%i'%obj.id
-    
+        return "/services/service-detail/%i" % obj.id

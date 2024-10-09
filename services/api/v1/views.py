@@ -1,61 +1,84 @@
-from rest_framework.decorators import api_view , permission_classes
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from services.models import Service , Team , Comment
-from .serializer import Serviceserializer , TeamSerializer, CommentSerializer
+from services.models import Service, Team, Comment
+from .serializer import Serviceserializer, TeamSerializer, CommentSerializer
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from rest_framework.permissions import IsAdminUser,IsAuthenticated,IsAuthenticatedOrReadOnly
+from rest_framework.permissions import (
+    IsAdminUser,
+    IsAuthenticated,
+    IsAuthenticatedOrReadOnly,
+)
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import ListModelMixin , CreateModelMixin , RetrieveModelMixin , DestroyModelMixin , UpdateModelMixin
+from rest_framework.mixins import (
+    ListModelMixin,
+    CreateModelMixin,
+    RetrieveModelMixin,
+    DestroyModelMixin,
+    UpdateModelMixin,
+)
 from rest_framework import viewsets
 from .permissions import IsAdminOrReadOnly
-from django_filters.rest_framework import DjangoFilterBackend 
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.exceptions import MethodNotAllowed
 from .pagination import Custompagination
 
-class ServiceApiViewSet(viewsets.ModelViewSet):
-    permission_classes=[IsAuthenticatedOrReadOnly]
-    serializer_class = Serviceserializer
-    filter_backends = [DjangoFilterBackend , filters.SearchFilter , filters.OrderingFilter]
-    filterset_fields = ['category', 'name']
-    search_fields = ['price']
-    ordering_fields = ['created_at']
-    pagination_class = Custompagination
 
+class ServiceApiViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = Serviceserializer
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    filterset_fields = ["category", "name"]
+    search_fields = ["price"]
+    ordering_fields = ["created_at"]
+    pagination_class = Custompagination
 
     def get_queryset(self):
         return Service.objects.all()
-    
+
+
 class TeamApiViewSet(viewsets.ModelViewSet):
-    permission_classes=[IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
     serializer_class = TeamSerializer
+
     def get_queryset(self):
         return Team.objects.all()
-    
+
+
 class CommentApiViewSet(viewsets.ModelViewSet):
-    permission_classes=[IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = CommentSerializer
+
     def get_queryset(self):
         return Comment.objects.all()
-    
+
     def destroy(self, request, *args, **kwargs):
-        comment = get_object_or_404(Comment , id = kwargs.get('pk'))
+        comment = get_object_or_404(Comment, id=kwargs.get("pk"))
         if comment.user == request.user:
             comment.delete()
-            return Response('service deleted successfully',status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                "service deleted successfully", status=status.HTTP_204_NO_CONTENT
+            )
         else:
-            raise MethodNotAllowed('DELETE')
-        
-    def patch(self,instance ,  request, *args, **kwargs):
-        comment = get_object_or_404(Comment , id = kwargs.get('pk'))
+            raise MethodNotAllowed("DELETE")
+
+    def patch(self, instance, request, *args, **kwargs):
+        comment = get_object_or_404(Comment, id=kwargs.get("pk"))
         user = request.user
         if comment.user == request.user:
             comment.update(instance)
-            return Response('service update successfully',status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                "service update successfully", status=status.HTTP_204_NO_CONTENT
+            )
         else:
-            raise MethodNotAllowed('Update')
+            raise MethodNotAllowed("Update")
+
 
 # ======================================================
 # start level 5
@@ -66,7 +89,7 @@ class CommentApiViewSet(viewsets.ModelViewSet):
 
 #     def get_queryset(self):
 #         return Service.objects.all()
-    
+
 #     def list(self , request, *args, **kwargs):
 #         serializer = self.serializer_class(self.get_queryset(), many=True)
 #         return Response(serializer.data)
@@ -137,7 +160,7 @@ class CommentApiViewSet(viewsets.ModelViewSet):
 
 #     def get_queryset(self):
 #         return Service.objects.all()
-    
+
 #     def get(self , request, *args, **kwargs):
 #         return self.list(request, *args, **kwargs)
 
@@ -149,7 +172,7 @@ class CommentApiViewSet(viewsets.ModelViewSet):
 
 
 # ===========================================
-# start class base level  2 
+# start class base level  2
 # ==========================================
 
 # class ServiceApiView(APIView):
@@ -166,7 +189,7 @@ class CommentApiViewSet(viewsets.ModelViewSet):
 #             if serializer.is_valid():
 #                 serializer.save()
 #                 return Response(serializer.data , status=status.HTTP_201_created)
-        
+
 #             else:
 #                 return Response(serializer.error)
 #         else:
@@ -174,7 +197,7 @@ class CommentApiViewSet(viewsets.ModelViewSet):
 
 
 # class ServiceDetailApiview(APIView):
-#     permission_classes=[IsAuthenticatedOrReadOnly] 
+#     permission_classes=[IsAuthenticatedOrReadOnly]
 
 #     def get(self , request, *args, **kwargs):
 #         id = kwargs.get('id')
@@ -188,7 +211,7 @@ class CommentApiViewSet(viewsets.ModelViewSet):
 #         serializer.save()
 #         return Response(serializer.data ,status=status.HTTP_200_OK)
 
-    
+
 #     def delete(self , request, *args, **kwargs):
 #         services = get_object_or_404(Service , id=id)
 #         services.delete()
@@ -199,11 +222,11 @@ class CommentApiViewSet(viewsets.ModelViewSet):
 # =====================================
 
 
-#==============================
+# ==============================
 # start level 1   functions base !!!!!
-#==============================
+# ==============================
 # @api_view(['GET', 'POST'])
-# @permission_classes([IsAuthenticatedOrReadOnly])  
+# @permission_classes([IsAuthenticatedOrReadOnly])
 # def services(request):
 #     if request.method == 'GET':
 #         services = Service.objects.all()
@@ -223,7 +246,7 @@ class CommentApiViewSet(viewsets.ModelViewSet):
 
 # @api_view(['GET', 'PATCH','DELETE'])
 # def services_detail(request , id):
-#     service = get_object_or_404(Service,id=id)        
+#     service = get_object_or_404(Service,id=id)
 #     if request.method == 'GET':
 #         # try:
 #         #     services = Service.objects.get(id=id)
@@ -242,6 +265,6 @@ class CommentApiViewSet(viewsets.ModelViewSet):
 #         service.delete()
 #         return Response('service deleted', status=status.HTTP_204_NO_CONTENT)
 
-#==================================
-#end level 1
-#=================================
+# ==================================
+# end level 1
+# =================================

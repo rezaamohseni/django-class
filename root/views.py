@@ -8,6 +8,7 @@ from services.models import Team
 from .forms import ContactUSForm
 from django.contrib import messages
 from django.views.generic import TemplateView
+from django.contrib.auth.decorators import login_required
 
 # def home(request):
 
@@ -29,8 +30,7 @@ class HomeView(TemplateView):
         context["questions"] = FrequentlyQuestions.objects.all()
         context["specials"] = SpecialService.objects.all()
         return context
-
-
+@login_required
 def contact(request):
     if request.method == "POST":
         form = ContactUSForm(request.POST)

@@ -27,3 +27,8 @@ class TestUrl(TestCase):
     def test_model_comment(self):
         comment = Comment.objects.create(user=self.user , product_name = "s1" , message="boos")
         self.assertEqual(comment.message , "boos")
+#test exist object in model
+    def test_model_comment(self):
+        comment = Comment.objects.create(user=self.user , product_name = "s1" , message="boos")
+        self.assertTrue(Comment.objects.filter(user=self.user).exists())
+        

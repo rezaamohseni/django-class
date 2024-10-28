@@ -23,7 +23,7 @@ from .permissions import IsAdminOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.exceptions import MethodNotAllowed
-from .pagination import Custompagination
+# from .pagination import Custompagination
 
 
 class ServiceApiViewSet(viewsets.ModelViewSet):
@@ -37,7 +37,7 @@ class ServiceApiViewSet(viewsets.ModelViewSet):
     filterset_fields = ["category", "name"]
     search_fields = ["price"]
     ordering_fields = ["created_at"]
-    pagination_class = Custompagination
+    # pagination_class = Custompagination
 
     def get_queryset(self):
         return Service.objects.all()

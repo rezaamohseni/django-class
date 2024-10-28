@@ -1,6 +1,6 @@
-from rest_framework import pagination
+# from rest_framework import pagination
 
 
-class Custompagination(pagination.PageNumberPagination):
+# class Custompagination(pagination.PageNumberPagination):
 
-    page_size = 2
+#     page_size = 2

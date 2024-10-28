@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase , Client
 from django.urls import reverse , resolve
 from .forms import ContactUSForm
 from services.forms import CommentForm
@@ -43,3 +43,34 @@ class TestUrl(TestCase):
             "message" : "text"
         })
         self.assertTrue(form.is_valid())
+#test response url for home
+    def test_response_home(self):
+        url = reverse("root:home")
+        c = Client()
+        response = c.get(path = url)
+        self.assertEqual(response.status_code , 200)
+#test exists form html
+    def test_template_home(self):
+        url = reverse("root:home")
+        c = Client()
+        response = c.get(url)
+        self.assertTemplateUsed(response , template_name="root/index.html")        
+    def test_template_content_home(self):
+        url = reverse("root:home")
+        c = Client()
+        response = c.get(url)
+        if "totam" not in str(response.content):
+            raise AssertionError("content my be change") 
+        # self.assertTrue(str(response.content).find("totam")) 
+#test response status code in equal and not equal       
+    def test_response_contac_200(self):
+        url = reverse("root:contact")
+        c = Client()
+        c.force_login(self.user)
+        response = c.get(url)
+        self.assertEqual(response.status_code , 200)
+    def test_response_contac_302(self):
+        url = reverse("root:contact")
+        c = Client()
+        response = c.get(url)
+        self.assertEqual(response.status_code , 302)

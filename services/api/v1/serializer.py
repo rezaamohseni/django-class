@@ -24,39 +24,36 @@ class Serviceserializer(serializers.ModelSerializer):
             "title",
             "description",
             "price",
-            "category",
-            "generals",
-            "created_at",
-            "detail_link",
+
         ]
-        read_only_fields = ["name"]
+    #     read_only_fields = ["name"]
 
-    def cat_name(self, instance):
-        return str(instance.name).upper()
+    # def cat_name(self, instance):
+    #     return str(instance.name).upper()
 
-    def year(self, instance):
-        return (str(instance.created_at).split("-"))[0]
+    # def year(self, instance):
+    #     return (str(instance.created_at).split("-"))[0]
 
-    def detail(self, instance):
-        request = self.context.get("request")
-        return str(request.build_absolute_uri()) + f"/{instance.pk}"
+    # def detail(self, instance):
+    #     request = self.context.get("request")
+    #     return str(request.build_absolute_uri()) + f"/{instance.pk}"
 
     # def to_representation(self, instance):
     #     rep = super().to_representation(instance)
     #     rep['category'] = [cat.title for  cat in instance.category.all()]
     #     return rep
-    def to_representation(self, instance):
-        rep = super().to_representation(instance)
-        request = self.context.get("request")
-        kwargs = request.parser_context.get("kwargs")
+    # def to_representation(self, instance):
+    #     rep = super().to_representation(instance)
+    #     request = self.context.get("request")
+    #     kwargs = request.parser_context.get("kwargs")
 
-        if kwargs.get("pk"):
-            rep["category"] = [cat.title for cat in instance.category.all()]
+    #     if kwargs.get("pk"):
+    #         rep["category"] = [cat.title for cat in instance.category.all()]
 
-        else:
-            rep.pop("category")
+    #     else:
+    #         rep.pop("category")
 
-        return rep
+    #     return rep
 
 
 class TeamSerializer(serializers.ModelSerializer):
